@@ -11,3 +11,9 @@ add_executable(unit_test
 target_include_directories(unit_test PRIVATE
     ${ROOT_DIR}/OrderbookReconstructor/test/unit
 )
+
+set_target_properties(unit_test PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR}
+)
+
+
