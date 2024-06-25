@@ -2,6 +2,8 @@
 #include <cassert>
 #include <cstdint>
 
+namespace Orderbook {
+
 class IDataSource
 {
 public:
@@ -34,4 +36,6 @@ public:
         return false;
     }
 };
+
+} // namespace Orderbook
 
