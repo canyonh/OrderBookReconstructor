@@ -1,5 +1,5 @@
 #pragma once
-#include "itch.h"
+#include "Orderbook/itch.h"
 
 namespace Orderbook
 {
@@ -11,7 +11,6 @@ public:
 
 private:
     float  best_price = 0;
-    Itch::Order::Volume volume_at_best_price = 0;
 };
 
 }
