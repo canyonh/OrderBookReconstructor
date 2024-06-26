@@ -13,8 +13,6 @@ using Int6 = uint64_t;
 using Int8 = uint64_t;
 using Alpha = char;
 
-enum class BuySeell : char {Buy = 'B', Sell = 'S'};
-
 struct Order
 {
     using OrderId = Int8;
@@ -36,5 +34,7 @@ struct Order
 
     bool operator==(const Order& rhs) const = default;
 };
+
+
 
 };

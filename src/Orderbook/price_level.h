@@ -1,5 +1,7 @@
 #pragma once
 
+#include "src/Orderbook/Orderbook.h"
+
 namespace Orderbook
 {
 
@@ -12,6 +14,7 @@ public:
 class PriceLevels
 {
 public:
+    PriceLevel* GetPriceLevels(Itch::)
 
 };
 
