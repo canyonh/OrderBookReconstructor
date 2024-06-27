@@ -3,9 +3,9 @@
 #include <cassert>
 #include <list>
 #include <map>
-#include <unordered_map>
+#include <vector>
 #include <algorithm>
-#include "Orderbook/orderbook.h"
+#include "Orderbook/orders.h"
 
 namespace Orderbook
 {
@@ -58,24 +58,43 @@ public:
         table_entry.emplace_back(timestamp_in, order_id_in, volume_in);
     }
 
+
 private:
-    Order::Price price = 0;
     Order::Volume total_volume = 0;
 
     // use map since we need timestamp to be sorted
     std::map<Order::Timestamp, std::list<OrderEntry>> order_entries;
 };
 
-class PriceLevels
+class StockOrderbook 
 {
 public:
-    PriceLevel* GetPriceLevels(Order::Price price_in)
+    StockOrderbook(Order::Side side_in)
+        : side(side_in)
+    {}
+
+    // Remove all orders and return all the order_id that is better than
+    // target price
+    bool SweepBook(Order::Price target_price, std::vector<Order::OrderId>& collected_orders)
     {
-        auto it = price_levels.find(price_in);
-        return it != price_levels.end() ? &it->second : nullptr;
+        assert(!"@write me");
+    }
+
+    // should create a price level if not exist
+    // should assert if two order has the same id
+    void AddOrder(const Order& order_in)
+    {
+        auto& price_level = GetPriceLevel(order_in.price);
+        price_level.AddOrderEntry(order_in.time_stamp, order_in.order_id, order_in.volume);
     }
 
 private:
+    PriceLevel& GetPriceLevel(Order::Price price_in)
+    {
+        return price_levels[price_in];
+    }
+
+    Order::Side side;
     std::unordered_map<Order::Price, PriceLevel> price_levels;
 };
 

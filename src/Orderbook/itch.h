@@ -13,5 +13,4 @@ using Int6 = uint64_t;
 using Int8 = uint64_t;
 using Alpha = char;
 
-
 };
