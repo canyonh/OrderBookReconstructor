@@ -1,16 +1,16 @@
 find_package(GTest)
 
-set(src_files
+set(UNITTEST_SRC_FILES
 )
 
-set(unit_test_files
+set(UNITTEST_HARNESS_FILES
     ${ROOT_DIR}/test/unit/unit_test.cpp
     ${ROOT_DIR}/test/unit/thread_safe_queue_test.cpp
 )
 
 add_executable(unit_test
-    ${unit_test_files}
-    ${src_files}
+    ${UNITTEST_SRC_FILES}
+    ${UNITTEST_HARNESS_FILES}
 )
 
 target_include_directories(unit_test PRIVATE

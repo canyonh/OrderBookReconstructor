@@ -1,15 +1,16 @@
 find_package(benchmark)
 
-set(BENCHMARK_FRAMEWORK_FILES
-    ${ROOT_DIR}/test/benchmark/benchmark.cpp
+set(BENCHMARK_SRC_FILES
 )
 
-set(BENCHMARK_BENCHMARK_FILES
+set(BENCHMARK_HARNESS_FILES
+    ${ROOT_DIR}/test/benchmark/benchmark.cpp
+    ${ROOT_DIR}/test/benchmark/queue_benchmark.cpp
 )
 
 add_executable(benchmark
-    ${BENCHMARK_FRAMEWORK_FILES}
-    ${BENCHMARK_BENCHMARK_FILES}
+    ${BENCHMARK_SRC_FILES}
+    ${BENCHMARK_HARNESS_FILES}
 )
 
 target_link_libraries(benchmark PRIVATE benchmark::benchmark)
