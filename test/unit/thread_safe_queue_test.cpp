@@ -63,4 +63,35 @@ TEST_F(ThreadSafeQueueTest, MultiThreaded)
     ASSERT_TRUE(sum == expected_sum);
 }
 
+TEST_F(ThreadSafeQueueTest, Timeout)
+{
+    ThreadSafeQueue<int> queue;
+    auto start = std::chrono::steady_clock::now();
+    auto result = queue.Pop(std::chrono::milliseconds(100));
+    auto end = std::chrono::steady_clock::now();
+    ASSERT_FALSE(result);
+    ASSERT_GE(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(), 100);
+}
+
+TEST_F(ThreadSafeQueueTest, Order)
+{
+    ThreadSafeQueue<int> queue;
+    for (int i = 0; i < 100; ++i) {
+        queue.Push(i);
+    }
+    for (int i = 0; i < 100; ++i) {
+        auto result = queue.Pop();
+        ASSERT_TRUE(result);
+        ASSERT_EQ(*result, i);
+    }
+}
+
+TEST_F(ThreadSafeQueueTest, MoveSemantics)
+{
+    ThreadSafeQueue<std::unique_ptr<int>> queue;
+    queue.Push(std::make_unique<int>(42));
+    auto result = queue.Pop();
+    ASSERT_TRUE(result && **result == 42);
+}
+
 } // namespace UnitTest
