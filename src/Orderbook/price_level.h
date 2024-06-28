@@ -20,22 +20,14 @@ public:
         Order::Volume volume = 0;
     };
 
-    // find an order entry so we can modify it
-    OrderEntry* FindOrderEntry(Order::Timestamp timestamp_in, Order::OrderId id_in)
+    void AddOrder(Order::Timestamp timestamp_in, Order::OrderId order_id_in, Order::Volume volume_in)
     {
-        auto map_it = order_entries.find(timestamp_in);
-        assert(map_it != order_entries.end());
-
-        auto& entry_list = map_it->second;
-        auto list_it = std::find_if(entry_list.begin(), entry_list.end(), [timestamp_in](const auto& elem) {
-                return elem.timestamp == timestamp_in;
-                });
-
-        return list_it == entry_list.end() ? nullptr : &(*list_it);
+        auto& table_entry = order_entries[timestamp_in];
+        table_entry.emplace_back(timestamp_in, order_id_in, volume_in);
     }
 
     // we can lookup timestamp in orders
-    void RemoveOrderEntry(Order::Timestamp timestamp_in, Order::OrderId order_id_in)
+    void DeleteOrder(Order::Timestamp timestamp_in, Order::OrderId order_id_in)
     {
         // find the order entry, assertion should be enough for now
         // since it is considered as system error. 
@@ -52,14 +44,22 @@ public:
         entry_list.erase(list_it);
     }
 
-    void AddOrderEntry(Order::Timestamp timestamp_in, Order::OrderId order_id_in, Order::Volume volume_in)
+private:
+
+    // find an order entry so we can modify it
+    OrderEntry* FindOrder(Order::Timestamp timestamp_in, Order::OrderId id_in)
     {
-        auto& table_entry = order_entries[timestamp_in];
-        table_entry.emplace_back(timestamp_in, order_id_in, volume_in);
+        auto map_it = order_entries.find(timestamp_in);
+        assert(map_it != order_entries.end());
+
+        auto& entry_list = map_it->second;
+        auto list_it = std::find_if(entry_list.begin(), entry_list.end(), [timestamp_in](const auto& elem) {
+                return elem.timestamp == timestamp_in;
+                });
+
+        return list_it == entry_list.end() ? nullptr : &(*list_it);
     }
 
-
-private:
     Order::Volume total_volume = 0;
 
     // use map since we need timestamp to be sorted
@@ -85,9 +85,20 @@ public:
     void AddOrder(const Order& order_in)
     {
         auto& price_level = GetPriceLevel(order_in.price);
-        price_level.AddOrderEntry(order_in.time_stamp, order_in.order_id, order_in.volume);
+        price_level.AddOrder(order_in.time_stamp, order_in.order_id, order_in.volume);
     }
 
+    void DeleteOrder(const Order::OrderId& order_id_in, Order::Price price_in, Order::Timestamp timestamp_in)
+    {
+        auto& price_level = GetPriceLevel(price_in);
+        price_level.DeleteOrder(order_id_in, timestamp_in);
+    }
+
+    void CancelOrder(const Order::OrderId& order_id_in, Order::Price price_in, Order::Timestamp timestamp_in, Order::Volume vol_in)
+    {
+        auto& price_level = GetPriceLevel(price_in);
+        price_level.DeleteOrder(order_id_in, timestamp_in);
+    }
 private:
     PriceLevel& GetPriceLevel(Order::Price price_in)
     {
