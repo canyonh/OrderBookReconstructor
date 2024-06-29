@@ -3,7 +3,7 @@
 #include "Orderbook/orders.h"
 #include "Orderbook/price_level.h"
 
-namespace Orderbook
+namespace OrderbookReconstructor
 {
 
 class Sidebook

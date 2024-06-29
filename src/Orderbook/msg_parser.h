@@ -1,7 +1,7 @@
 #pragma once
 #include <optional>
 
-namespace Orderbook
+namespace OrderbookReconstructor
 {
 
 class BitStreamReader;
@@ -27,4 +27,4 @@ private:
     BitStreamReader* reader = nullptr;
 };
 
-} // namespace Orderbook
+} // namespace OrderbookReconstructor

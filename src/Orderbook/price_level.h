@@ -7,7 +7,7 @@
 #include <algorithm>
 #include "Orderbook/orders.h"
 
-namespace Orderbook
+namespace OrderbookReconstructor
 {
 
 class PriceLevel
@@ -110,4 +110,4 @@ private:
 };
 
 
-} // namespace Orderbook
+} // namespace OrderbookReconstructor

@@ -1,11 +1,13 @@
 find_package(GTest)
 
 set(UNITTEST_SRC_FILES
+    ${ROOT_DIR}/src/Orderbook/orderbook.cpp
 )
 
 set(UNITTEST_HARNESS_FILES
     ${ROOT_DIR}/test/unit/unit_test.cpp
     ${ROOT_DIR}/test/unit/thread_safe_queue_test.cpp
+    ${ROOT_DIR}/test/unit/orderbook_test.cpp
 )
 
 add_executable(unit_test

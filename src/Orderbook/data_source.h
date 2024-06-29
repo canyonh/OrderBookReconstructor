@@ -2,7 +2,7 @@
 #include <cassert>
 #include "itch.h"
 
-namespace Orderbook {
+namespace OrderbookReconstructor {
 
 class IDataSource
 {

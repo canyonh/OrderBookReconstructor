@@ -1,6 +1,6 @@
 #include "Orderbook/orderbook.h"
 
-namespace Orderbook
+namespace OrderbookReconstructor
 {
 
 bool Orderbook::AddOrder(const Order& order_in)
