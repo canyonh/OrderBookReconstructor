@@ -8,9 +8,7 @@ template<template<typename...> class Queue, typename Elem = int>
 class BoostQueueAdapter
 {
 public:
-    Queue<Elem> queue;
-
-    BoostQueueAdapter(int capacity = 128) : queue(capacity) {} // Adjust capacity as needed
+    BoostQueueAdapter(int capacity = 8192) : queue(capacity) {} // Adjust capacity as needed
 
     void Push(const int& value) {
         while (!queue.push(value)) {
@@ -25,6 +23,8 @@ public:
         }
         return std::nullopt;
     }
+private:
+    Queue<Elem> queue;
 };
 
 template<typename T>

@@ -23,8 +23,6 @@ static void BM_PushPop(benchmark::State& state) {
     state.SetItemsProcessed(state.iterations() * state.range(0) * 2);
 }
 
-// Register the benchmark
-BENCHMARK_TEMPLATE(BM_PushPop, ThreadSafeQueue)->Range(8, 8<<10);
 
 // Benchmark for Push only
 template <template<typename> class QueueType>
@@ -35,8 +33,6 @@ static void BM_Push(benchmark::State& state) {
     }
     state.SetItemsProcessed(state.iterations());
 }
-
-BENCHMARK_TEMPLATE(BM_Push, ThreadSafeQueue);
 
 // Benchmark for Pop only
 template <template<typename> class QueueType>
@@ -51,12 +47,15 @@ static void BM_Pop(benchmark::State& state) {
     state.SetItemsProcessed(state.iterations());
 }
 
-BENCHMARK_TEMPLATE(BM_Pop, ThreadSafeQueue);
+//BENCHMARK_TEMPLATE(BM_Pop, ThreadSafeQueue);
+//BENCHMARK_TEMPLATE(BM_Push, ThreadSafeQueue);
+BENCHMARK_TEMPLATE(BM_PushPop, ThreadSafeQueue)->Range(8, 8<<10);
 
+//BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeQueue);
+//BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeQueue);
 BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeQueue)->Range(8, 8<<10);
-BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeQueue);
-BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeQueue);
 
+// will hang
+//BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeSPSCQueue);
+//BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeSPSCQueue);
 BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeSPSCQueue)->Range(8, 8<<10);
-BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeSPSCQueue);
-BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeSPSCQueue);
