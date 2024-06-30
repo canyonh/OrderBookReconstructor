@@ -16,7 +16,7 @@ add_executable(orderbook_exe
 )
 
 target_include_directories(orderbook_exe PRIVATE
-    ${ROOT_DIR}/src
+    ${ROOT_DIR}
 )
 
 set_target_properties(orderbook_exe PROPERTIES

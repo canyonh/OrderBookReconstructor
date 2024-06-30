@@ -16,7 +16,7 @@ add_executable(benchmark
 target_link_libraries(benchmark PRIVATE benchmark::benchmark)
 
 target_include_directories(benchmark PRIVATE
-    ${ROOT_DIR}/src
+    ${ROOT_DIR}
 )
 
 set_target_properties(benchmark PROPERTIES

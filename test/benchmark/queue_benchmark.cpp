@@ -1,10 +1,13 @@
 #include <benchmark/benchmark.h>
-#include "utils/thread_safe_queue.h"
+#include "src/utils/thread_safe_queue.h"
+#include "test/common/boost_queue_adapter.h"
 
 using namespace Util;
 
+
+template <template<typename> class QueueType>
 static void BM_PushPop(benchmark::State& state) {
-    ThreadSafeQueue<int> queue;
+    QueueType<int> queue;
     for (auto _ : state) {
         state.PauseTiming();
         const int NUM_OPERATIONS = state.range(0);
@@ -21,22 +24,24 @@ static void BM_PushPop(benchmark::State& state) {
 }
 
 // Register the benchmark
-BENCHMARK(BM_PushPop)->Range(8, 8<<10);
+BENCHMARK_TEMPLATE(BM_PushPop, ThreadSafeQueue)->Range(8, 8<<10);
 
 // Benchmark for Push only
+template <template<typename> class QueueType>
 static void BM_Push(benchmark::State& state) {
-    ThreadSafeQueue<int> queue;
+    QueueType<int> queue;
     for (auto _ : state) {
         queue.Push(42);
     }
     state.SetItemsProcessed(state.iterations());
 }
 
-BENCHMARK(BM_Push);
+BENCHMARK_TEMPLATE(BM_Push, ThreadSafeQueue);
 
 // Benchmark for Pop only
+template <template<typename> class QueueType>
 static void BM_Pop(benchmark::State& state) {
-    ThreadSafeQueue<int> queue;
+    QueueType<int> queue;
     for (auto _ : state) {
         state.PauseTiming();
         queue.Push(42);
@@ -46,4 +51,12 @@ static void BM_Pop(benchmark::State& state) {
     state.SetItemsProcessed(state.iterations());
 }
 
-BENCHMARK(BM_Pop);
+BENCHMARK_TEMPLATE(BM_Pop, ThreadSafeQueue);
+
+BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeQueue)->Range(8, 8<<10);
+BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeQueue);
+BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeQueue);
+
+BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeSPSCQueue)->Range(8, 8<<10);
+BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeSPSCQueue);
+BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeSPSCQueue);

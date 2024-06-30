@@ -16,7 +16,7 @@ add_executable(unit_test
 )
 
 target_include_directories(unit_test PRIVATE
-    ${ROOT_DIR}/src
+    ${ROOT_DIR}
 )
 
 target_link_libraries(unit_test PRIVATE GTest::GTest)
