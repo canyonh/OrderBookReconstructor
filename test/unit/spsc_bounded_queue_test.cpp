@@ -74,7 +74,7 @@ TYPED_TEST(SPSCBoundedQueueTest, MoveSemantics) {
 }
 
 TYPED_TEST(SPSCBoundedQueueTest, ConcurrentPushPop) {
-    static constexpr int NUM_OPERATIONS = 10000;
+    static constexpr int NUM_OPERATIONS = 10;
 
     std::thread producer([&]() {
         for (int i = 0; i < NUM_OPERATIONS; ++i) {

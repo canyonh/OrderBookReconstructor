@@ -108,7 +108,7 @@ public:
         if (current_push_pos - current_pop_pos == Capacity)
             return false;
 
-        data[current_push_pos & Capacity] = elem;
+        data[current_push_pos % Capacity] = elem;
         push_pos.fetch_add(1, std::memory_order_release);
         return true;
     }
