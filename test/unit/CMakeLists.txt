@@ -7,6 +7,7 @@ set(UNITTEST_SRC_FILES
 set(UNITTEST_HARNESS_FILES
     ${ROOT_DIR}/test/unit/unit_test.cpp
     ${ROOT_DIR}/test/unit/thread_safe_queue_test.cpp
+    ${ROOT_DIR}/test/unit/spsc_bounded_queue_test.cpp
     ${ROOT_DIR}/test/unit/orderbook_test.cpp
 )
 

@@ -23,7 +23,7 @@ public:
     void AddOrder(Order::Timestamp timestamp_in, Order::OrderId order_id_in, Order::Volume volume_in)
     {
         auto& table_entry = order_entries[timestamp_in];
-        table_entry.emplace_back(timestamp_in, order_id_in, volume_in);
+        table_entry.push_back({timestamp_in, order_id_in, volume_in});
     }
 
     // we can lookup timestamp in orders
