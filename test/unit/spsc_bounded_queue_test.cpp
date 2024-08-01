@@ -5,7 +5,7 @@
 
 #include "src/utils/spsc_bounded_queue.h"
 
-using namespace Utils;
+using namespace Util;
 
 static constexpr size_t QUEUE_CAPACITY = 16; // Power of 2
                                              //
@@ -74,7 +74,7 @@ TYPED_TEST(SPSCBoundedQueueTest, MoveSemantics) {
 }
 
 TYPED_TEST(SPSCBoundedQueueTest, ConcurrentPushPop) {
-    static constexpr int NUM_OPERATIONS = 10;
+    static constexpr int NUM_OPERATIONS = 10000;
 
     std::thread producer([&]() {
         for (int i = 0; i < NUM_OPERATIONS; ++i) {

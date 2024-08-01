@@ -78,6 +78,7 @@ public:
     bool SweepBook(Order::Price target_price, std::vector<Order::OrderId>& collected_orders)
     {
         assert(!"@write me");
+        return false;
     }
 
     // should create a price level if not exist

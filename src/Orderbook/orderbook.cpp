@@ -64,11 +64,13 @@ bool Orderbook::ReplaceOrder(Order::OrderId old_order_id, Order::OrderId new_ord
 bool Orderbook::ExecuteOrder(Order::OrderId order_id, Order::Volume volume)
 {
     assert(!"@writeme");
+    return false;
 }
 
 bool Orderbook::ExecuteOrderWithPrice(Order::OrderId order_id, Order::Volume volume, Order::Price price)
 {
     assert(!"@writeme");
+    return false;
 }
 
 }

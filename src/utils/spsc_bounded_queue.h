@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <optional>
 
-namespace Utils
+namespace Util
 {
 
 #ifdef __GCC_DESTRUCTIVE_SIZE

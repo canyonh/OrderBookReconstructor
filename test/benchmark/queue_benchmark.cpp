@@ -1,22 +1,25 @@
 #include <benchmark/benchmark.h>
+#include "src/utils/spsc_bounded_queue.h"
 #include "src/utils/thread_safe_queue.h"
 #include "test/common/boost_queue_adapter.h"
 
 using namespace Util;
 
+static constexpr size_t MIN_OPERATIONS = 8;
+static constexpr size_t MAX_OPERATIONS = 8 << 10;
 
-template <template<typename> class QueueType>
+template <typename QueueType>
 static void BM_PushPop(benchmark::State& state) {
-    QueueType<int> queue;
+    QueueType queue;
     for (auto _ : state) {
         state.PauseTiming();
-        const int NUM_OPERATIONS = state.range(0);
+        const int num_ops = state.range(0);
         state.ResumeTiming();
         
-        for (int i = 0; i < NUM_OPERATIONS; ++i) {
+        for (int i = 0; i < num_ops; ++i) {
             queue.Push(i);
         }
-        for (int i = 0; i < NUM_OPERATIONS; ++i) {
+        for (int i = 0; i < num_ops; ++i) {
             queue.Pop();
         }
     }
@@ -25,9 +28,9 @@ static void BM_PushPop(benchmark::State& state) {
 
 
 // Benchmark for Push only
-template <template<typename> class QueueType>
+template <typename QueueType>
 static void BM_Push(benchmark::State& state) {
-    QueueType<int> queue;
+    QueueType queue;
     for (auto _ : state) {
         queue.Push(42);
     }
@@ -35,9 +38,9 @@ static void BM_Push(benchmark::State& state) {
 }
 
 // Benchmark for Pop only
-template <template<typename> class QueueType>
+template <template<typename> class QueueType, class ElemType>
 static void BM_Pop(benchmark::State& state) {
-    QueueType<int> queue;
+    QueueType<ElemType> queue;
     for (auto _ : state) {
         state.PauseTiming();
         queue.Push(42);
@@ -49,13 +52,18 @@ static void BM_Pop(benchmark::State& state) {
 
 //BENCHMARK_TEMPLATE(BM_Pop, ThreadSafeQueue);
 //BENCHMARK_TEMPLATE(BM_Push, ThreadSafeQueue);
-BENCHMARK_TEMPLATE(BM_PushPop, ThreadSafeQueue)->Range(8, 8<<10);
+BENCHMARK_TEMPLATE(BM_PushPop, ThreadSafeQueue<int>)->Range(MIN_OPERATIONS, MAX_OPERATIONS);
 
 //BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeQueue);
 //BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeQueue);
-BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeQueue)->Range(8, 8<<10);
+BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeQueue<int>)->Range(MIN_OPERATIONS, MAX_OPERATIONS);
 
 // will hang
 //BENCHMARK_TEMPLATE(BM_Push, BoostLockfreeSPSCQueue);
 //BENCHMARK_TEMPLATE(BM_Pop, BoostLockfreeSPSCQueue);
-BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeSPSCQueue)->Range(8, 8<<10);
+BENCHMARK_TEMPLATE(BM_PushPop, BoostLockfreeSPSCQueue<int>)->Range(MIN_OPERATIONS, MAX_OPERATIONS);
+
+BENCHMARK_TEMPLATE(BM_PushPop, SPSCBoundedQueueSeqCstFalseSharing<int, MAX_OPERATIONS> )->Range(MIN_OPERATIONS, MAX_OPERATIONS);
+BENCHMARK_TEMPLATE(BM_PushPop, SPSCBoundedQueueSeqCst<int, MAX_OPERATIONS> )->Range(MIN_OPERATIONS, MAX_OPERATIONS);
+BENCHMARK_TEMPLATE(BM_PushPop, SPSCBoundedQueueModulous<int, MAX_OPERATIONS> )->Range(MIN_OPERATIONS, MAX_OPERATIONS);
+BENCHMARK_TEMPLATE(BM_PushPop, SPSCBoundedQueue<int, MAX_OPERATIONS> )->Range(MIN_OPERATIONS, MAX_OPERATIONS);
