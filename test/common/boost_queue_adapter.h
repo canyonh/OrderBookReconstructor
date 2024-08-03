@@ -12,10 +12,8 @@ public:
 
     BoostQueueAdapter(int capacity = 16384) : queue(capacity) {} // Adjust capacity as needed
 
-    void Push(const int& value) {
-        while (!queue.push(value)) {
-            // Keep trying if push fails
-        }
+    bool Push(const int& value) {
+       return!queue.push(value);
     }
 
     std::optional<Elem> Pop() {

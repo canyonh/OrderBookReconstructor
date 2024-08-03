@@ -12,22 +12,24 @@ template <typename T>
 class ThreadSafeQueue
 {
 public:
-    void Push(const T& t)
+    bool Push(const T& t)
     {
         {
             std::lock_guard lock(mutex);
             q.emplace_back(t);
         }
         cv.notify_one();
+        return true;
     }
 
-    void Push(T&& t)
+    bool Push(T&& t)
     {
         {
             std::lock_guard lock(mutex);
             q.emplace_back(std::move(t));
         }
         cv.notify_one();
+        return true;
     }
 
     std::optional<T> Pop()

@@ -7,7 +7,7 @@
 
 using namespace Util;
 
-static constexpr size_t QUEUE_CAPACITY = 16; // Power of 2
+static constexpr size_t QUEUE_CAPACITY = 256; // Power of 2
                                              //
 template <typename QueueType>
 class SPSCBoundedQueueTest : public ::testing::Test {
@@ -19,7 +19,8 @@ using QueueTypes = ::testing::Types<
     SPSCBoundedQueueSeqCst<int, QUEUE_CAPACITY>,
     SPSCBoundedQueueSeqCstFalseSharing<int, QUEUE_CAPACITY>,
     SPSCBoundedQueueModulous<int, QUEUE_CAPACITY>,
-    SPSCBoundedQueue<int, QUEUE_CAPACITY>
+    SPSCBoundedQueue<int, QUEUE_CAPACITY>,
+    SPSCBoundedQueueCachedSize<int, QUEUE_CAPACITY>
 >;
 
 TYPED_TEST_SUITE(SPSCBoundedQueueTest, QueueTypes);
@@ -74,22 +75,22 @@ TYPED_TEST(SPSCBoundedQueueTest, MoveSemantics) {
 }
 
 TYPED_TEST(SPSCBoundedQueueTest, ConcurrentPushPop) {
-    static constexpr int NUM_OPERATIONS = 10000;
+    static constexpr int NUM_OPERATIONS = 16384000;
+
+    std::chrono::microseconds us;
+
+    auto now = std::chrono::steady_clock::now();
 
     std::thread producer([&]() {
         for (int i = 0; i < NUM_OPERATIONS; ++i) {
-            while (!this->queue.Push(i)) {
-                std::this_thread::yield();
-            }
+            while (!this->queue.Push(i)) {}
         }
     });
 
     std::thread consumer([&]() {
         for (int i = 0; i < NUM_OPERATIONS; ++i) {
             std::optional<int> elem;
-            while (!(elem = this->queue.Pop())) {
-                std::this_thread::yield();
-            }
+            while (!(elem = this->queue.Pop())) {};
             EXPECT_EQ(*elem, i);
         }
     });
